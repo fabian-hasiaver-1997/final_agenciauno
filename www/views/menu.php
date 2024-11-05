@@ -142,25 +142,23 @@ $email_usuario_autenticado = isset($_SESSION['email']) ? $_SESSION['email'] : 'U
                         <li class="nav-item">
                             <?php if (isset($_SESSION["id_rol"])) {
                                 if ($_SESSION["id_rol"] === 1) { ?>
-                            <a href="/views/crud_usuarios.php" class="nav-link">
-                                <i class="fa fa-user nav-icon"></i>
-                                <p>Usuarios</p>
-                            </a>
+                                    <a href="/views/crud_usuarios.php" class="nav-link">
+                                        <i class="fa fa-user nav-icon"></i>
+                                        <p>Usuarios</p>
+                                    </a>
                             <?php }
                             } ?>
                         </li>
-
-
                         <li class="nav-item">
                             <?php if (isset($_SESSION["id_rol"])) {
                                 if ($_SESSION["id_rol"] === 1) { ?>
-                            <a href="/views/email_config.php" class="nav-link">
-                                <i class="fa fa-envelope nav-icon"></i>
-                                <p>Config. Correo</p>
-                            </a>
+                                    <a href="/views/email_config.php" class="nav-link">
+                                        <i class="fa fa-envelope nav-icon"></i>
+                                        <p>Config. Correo</p>
+                                    </a>
                             <?php }
                             } ?>
-                        </li>                       
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -168,17 +166,23 @@ $email_usuario_autenticado = isset($_SESSION['email']) ? $_SESSION['email'] : 'U
                         <i class="fa fa-chart-pie nav-icon"></i>
                         <p>Estadisticas</p>
                     </a>
-                </li>        
+                </li>
                 <li class="nav-item">
-                            <?php if (isset($_SESSION["id_rol"])) {
-                                if ($_SESSION["id_rol"] === 1) { ?>
+                    <?php if (isset($_SESSION["id_rol"])) {
+                        if ($_SESSION["id_rol"] === 1) { ?>
                             <a href="../index.html" class="nav-link" target="_blank">
                                 <i class="fa fa-globe nav-icon"></i>
                                 <p>Sitio Web</p>
                             </a>
-                            <?php }
-                            } ?>
-                        </li>        
+                    <?php }
+                    } ?>
+                </li>
+                <li class="nav-item">
+                    <a href="/views/landing_product.php" class="nav-link">
+                        <i class="fa fa-image nav-icon"></i>
+                        <p>Añadir Productos</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <br><br>

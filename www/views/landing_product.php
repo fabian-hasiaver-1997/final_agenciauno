@@ -11,22 +11,28 @@ if (isset($_SESSION["id_rol"]) && ($_SESSION["id_rol"] == 1 || $_SESSION["id_rol
 }
 
 // Procesamiento del formulario
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['product_image'])) {
-    $description = $_POST['product_description'];
-    $targetDir = "../uploads/products/";
-    $imageName = basename($_FILES["product_image"]["name"]);
-    $targetFilePath = $targetDir . $imageName;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $uploadSuccess = true;
+    for ($i = 0; $i < 3; $i++) {
+        if (isset($_FILES["product_image_$i"]) && $_FILES["product_image_$i"]['name'] != "") {
+            $description = $_POST["product_description_$i"];
+            $price = $_POST["price_$i"];
+            $stock = $_POST["stock_$i"];
+            $targetDir = "../uploads/products/";
+            $imageName = basename($_FILES["product_image_$i"]["name"]);
+            $targetFilePath = $targetDir . $imageName;
 
-    // Mover el archivo a la carpeta de destino y guardar en la base de datos
-    if (move_uploaded_file($_FILES["product_image"]["tmp_name"], $targetFilePath)) {
-        // Guardar la ruta de la imagen y descripción en la base de datos
-        save_product($imageName, $description); // Esta función debe definirse en tu archivo de funciones
-        $message = "Producto agregado con éxito.";
-    } else {
-        $message = "Error al subir la imagen. Intente nuevamente.";
+            if (move_uploaded_file($_FILES["product_image_$i"]["tmp_name"], $targetFilePath)) {
+                save_product($imageName, $description, $price, $stock); // Definir esta función en tus funciones
+            } else {
+                $uploadSuccess = false;
+            }
+        }
     }
+    $message = $uploadSuccess ? "Productos agregados con éxito." : "Error al subir una o más imágenes. Intente nuevamente.";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -44,51 +50,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['product_image'])) {
         <?php include "menu.php" ?>
 
         <div class="container mt-5">
-            <h2>Add New Product</h2>
-            <form method="post" enctype="multipart/form-data" oninput="updatePreview()">
-                <div class="form-group">
-                    <label for="image">Product Image</label>
-                    <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="showPreview(event)" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Product Description</label>
-                    <input type="text" class="form-control" id="description" name="description" required>
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="number" class="form-control" id="price" name="price" required>
-                </div>
-                <div class="form-group">
-                    <label for="stock">Available Stock</label>
-                    <input type="number" class="form-control" id="stock" name="stock" required>
+            <h2>Add New Products</h2>
+            <form method="post" enctype="multipart/form-data" oninput="updatePreviews()">
+                <div class="row">
+                    <?php for ($i = 0; $i < 3; $i++): ?>
+                        <div class="col-md-4">
+                            <div class="product-entry border p-3 mb-4">
+                                <h4>Product <?php echo $i + 1; ?></h4>
+                                <div class="form-group">
+                                    <label for="product_image_<?php echo $i; ?>">Product Image</label>
+                                    <input type="file" class="form-control" id="product_image_<?php echo $i; ?>" name="product_image_<?php echo $i; ?>" accept="image/*" onchange="showPreview(event, <?php echo $i; ?>)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product_description_<?php echo $i; ?>">Product Description</label>
+                                    <input type="text" class="form-control" id="product_description_<?php echo $i; ?>" name="product_description_<?php echo $i; ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price_<?php echo $i; ?>">Price</label>
+                                    <input type="number" class="form-control" id="price_<?php echo $i; ?>" name="price_<?php echo $i; ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stock_<?php echo $i; ?>">Available Stock</label>
+                                    <input type="number" class="form-control" id="stock_<?php echo $i; ?>" name="stock_<?php echo $i; ?>" required>
+                                </div>
+                            </div>
+
+                            <h5>Preview for Product <?php echo $i + 1; ?></h5>
+                            <div class="card mb-4" style="width: 100%;">
+                                <img id="previewImage_<?php echo $i; ?>" class="card-img-top" alt="Image Preview">
+                                <div class="card-body">
+                                    <h5 id="previewDescription_<?php echo $i; ?>" class="card-title">Product Description</h5>
+                                    <p id="previewPrice_<?php echo $i; ?>" class="card-text">Price: $0.00</p>
+                                    <p id="previewStock_<?php echo $i; ?>" class="card-text">Available Stock: 0</p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endfor; ?>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-
-            <h3 class="mt-5">Preview</h3>
-            <div class="card mt-3" style="width: 18rem;">
-                <img id="previewImage" class="card-img-top" alt="Image Preview">
-                <div class="card-body">
-                    <h5 id="previewDescription" class="card-title">Product Description</h5>
-                    <p id="previewPrice" class="card-text">Price: $0.00</p>
-                    <p id="previewStock" class="card-text">Available Stock: 0</p>
-                </div>
-            </div>
         </div>
 
         <script>
-            function showPreview(event) {
+            function showPreview(event, index) {
                 if (event.target.files.length > 0) {
-                    var src = URL.createObjectURL(event.target.files[0]);
-                    var preview = document.getElementById("previewImage");
-                    preview.src = src;
+                    const src = URL.createObjectURL(event.target.files[0]);
+                    document.getElementById(`previewImage_${index}`).src = src;
                 }
             }
 
-            function updatePreview() {
-                document.getElementById("previewDescription").textContent = document.getElementById("description").value;
-                document.getElementById("previewPrice").textContent = "Price: $" + document.getElementById("price").value;
-                document.getElementById("previewStock").textContent = "Available Stock: " + document.getElementById("stock").value;
+            function updatePreviews() {
+                for (let i = 0; i < 3; i++) {
+                    document.getElementById(`previewDescription_${i}`).textContent = document.getElementById(`product_description_${i}`).value;
+                    document.getElementById(`previewPrice_${i}`).textContent = "Price: $" + document.getElementById(`price_${i}`).value;
+                    document.getElementById(`previewStock_${i}`).textContent = "Available Stock: " + document.getElementById(`stock_${i}`).value;
+                }
             }
         </script>
 
