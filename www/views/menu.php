@@ -177,12 +177,6 @@ $email_usuario_autenticado = isset($_SESSION['email']) ? $_SESSION['email'] : 'U
                     <?php }
                     } ?>
                 </li>
-                <li class="nav-item">
-                    <a href="/views/landing_product.php" class="nav-link">
-                        <i class="fa fa-image nav-icon"></i>
-                        <p>Añadir Productos</p>
-                    </a>
-                </li>
             </ul>
         </nav>
         <br><br>

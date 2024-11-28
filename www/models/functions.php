@@ -1349,3 +1349,95 @@ function obtenerDatosGraficos()
         ];
     }
 }
+function validate_and_upload_image($file, $product_id)
+{
+    $allowed_extensions = ['jpg', 'jpeg', 'png'];
+    $upload_dir = '../assets/img/';
+
+    // Verifica si hay error en la subida
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return "Error en la subida de archivo.";
+    }
+
+    // Verifica el tamaño máximo del archivo
+    if ($file['size'] > 5000000) { // 5MB
+        return "El archivo es demasiado grande.";
+    }
+
+    // Obtiene la extensión del archivo
+    $file_info = pathinfo($file['name']);
+    $extension = strtolower($file_info['extension']);
+
+    // Verifica si la extensión es válida
+    if (!in_array($extension, $allowed_extensions)) {
+        return "Solo se permiten archivos JPG, JPEG o PNG.";
+    }
+
+    // Crea el nuevo nombre de archivo basado en el ID del producto
+    $new_filename = $product_id . '.' . $extension;
+    $destination = $upload_dir . $new_filename;
+
+    // Mueve el archivo a la carpeta de destino
+    if (move_uploaded_file($file['tmp_name'], $destination)) {
+        return $destination;  // Devuelve la URL o la ruta del archivo de la imagen subida
+    } else {
+        return "Error al mover el archivo.";
+    }
+}
+
+function save_card_data($product_id, $image_url, $price)
+{
+    $db = database(); // Conexión a la base de datos
+
+    // Validar parámetros
+    $product_id = intval($product_id);
+    $price = floatval($price);
+    $image_url = filter_var($image_url, FILTER_SANITIZE_URL);
+
+    // Verifica que el precio sea válido
+    if ($price <= 0) {
+        return "El precio no es válido.";
+    }
+
+    // Insertar o actualizar los datos en la tabla landing_product
+    $sql = "INSERT INTO landing_product (product_id, image_url, price)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                image_url = VALUES(image_url),
+                price = VALUES(price);";
+
+    $stmt = $db->prepare($sql);
+    return $stmt->execute([$product_id, $image_url, $price]);
+}
+function get_all_products2()
+{
+    $db = database();
+    // Consulta SQL para obtener todos los registros de la tabla `products`
+    $sql = "SELECT * FROM products";
+
+    $stmt = $db->query($sql);
+    // Retorna los resultados
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function get_all_landing()
+{
+    $db = database();
+    // Consulta SQL para obtener todos los registros de la tabla `products`
+    $sql = "SELECT 
+products.name_product,
+products.description,
+products.description,
+products.stock,
+landing_product.id_landing,
+landing_product.image_url,
+landing_product.price
+FROM landing_product
+join products on landing_product.product_id= products.id_product
+";
+
+    $stmt = $db->query($sql);
+    // Retorna los resultados
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
