@@ -211,3 +211,10 @@ th {
   white-space: normal;
   overflow: hidden;
 }
+.slick-carousel .card {
+  height: 100%; /* Asegura que las cartas ocupen el mismo alto */
+}
+.slick-carousel .slick-slide {
+  display: flex;
+  justify-content: center;
+}

@@ -88,23 +88,27 @@ $productos = get_all_products2();
     <section class="bg-light">
         <div class="container pb-5">
             <div class="row">
-                <?php $productos = get_all_landing(); ?>
-                <?php foreach ($productos as $producto): ?>
-                    <div class="col-lg-4 mt-5">
-                        <div class="card">
-                            <!-- Mostrar imagen del producto -->
-                            <img class="card-img-top img-fluid" src="<?php echo $producto['image_url']; ?>" alt="<?php echo $producto['name_product']; ?>">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $producto['name_product']; ?></h5>
-                                <p class="card-text"><?php echo $producto['description']; ?></p>
-                                <ul class="list-unstyled">
-                                    <li><strong>Precio:</strong> $<?php echo $producto['price']; ?></li>
-                                    <li><strong>Stock disponible:</strong> <?php echo $producto['stock']; ?></li>
-                                </ul>
+                <div class="col-12">
+                    <div class="slick-carousel">
+                        <?php $productos = get_all_landing(); ?>
+                        <?php foreach ($productos as $producto): ?>
+                            <div>
+                                <div class="card mx-2">
+                                    <!-- Mostrar imagen del producto -->
+                                    <img class="card-img-top img-fluid" src="<?php echo $producto['image_url']; ?>" alt="<?php echo $producto['name_product']; ?>">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?php echo $producto['name_product']; ?></h5>
+                                        <p class="card-text"><?php echo $producto['description']; ?></p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Precio:</strong> $<?php echo $producto['price']; ?></li>
+                                            <li><strong>Stock disponible:</strong> <?php echo $producto['stock']; ?></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </section>
@@ -133,10 +137,14 @@ $productos = get_all_products2();
                     </ul>
                 </div>
                 <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Productos</h2>
+                    <a class="text-decoration-none" href="shop-single.php">
+                        <h2 class="h2 text-light border-bottom pb-3 border-light">Productos</h2>
+                    </a>
                 </div>
                 <div class="col-md-4 pt-5">
+
                     <h2 class="h2 text-light border-bottom pb-3 border-light">Información adicional</h2>
+
                     <ul class="list-unstyled text-light footer-link-list">
                         <li><a class="text-decoration-none" href="../index.html">Inicio</a></li>
                         <li><a class="text-decoration-none" href="../views/about.html">Sobre nosotros</a></li>
@@ -176,6 +184,35 @@ $productos = get_all_products2();
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/templatemo.js"></script>
     <script src="../assets/js/custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../assets/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/slick-theme.css">
+    <script src="../../assets/js/slick.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.slick-carousel').slick({
+                infinite: true, // Hace que el carrusel sea infinito
+                slidesToShow: 3, // Cantidad de cartas visibles al mismo tiempo
+                slidesToScroll: 1, // Cuántas cartas avanza por vez
+                dots: true, // Muestra los puntos de navegación
+                arrows: true, // Muestra las flechas de navegación
+                responsive: [{
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
 </body>
 
 </html>
