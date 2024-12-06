@@ -1441,15 +1441,14 @@ join products on landing_product.product_id= products.id_product
     // Retorna los resultados
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-function update_card_data($id_landing, $product_id, $image_url, $price)
+function update_card_data($id_landing, $image_url, $price)
 {
     $db = database();
     $query = "UPDATE landing_product 
-              SET product_id = :product_id, image_url = :image_url, price = :price 
+              SET image_url = :image_url, price = :price 
               WHERE id_landing = :id_landing";
 
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':product_id', $product_id);
     $stmt->bindParam(':image_url', $image_url);
     $stmt->bindParam(':price', $price);
     $stmt->bindParam(':id_landing', $id_landing);

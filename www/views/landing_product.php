@@ -159,9 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </section>
         </div>
-
         <?php foreach ($cards as $card) { ?>
-
             <div class="modal fade cierreModal" id="editUserModal<?php echo $card['id_landing']; ?>" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -172,28 +170,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="editteacher" action="../controller/edit_landing_card.php" method="POST" enctype="multipart/form-data">
+                            <form id="editCard" action="../controller/edit_landing_card.php" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="id_card" value="<?php echo $card['id_landing']; ?>">
                                 <input type="hidden" name="current_image" value="<?php echo $card['image_url']; ?>">
                                 <input type="hidden" name="current_product" value="<?php echo $card['product_id']; ?>">
-
-                                <div class="form-group">
-                                    <label for="product_id">Seleccionar Productos</label>
-                                    <select name="product_id" id="product_id" class="form-control">
-                                        <!-- Mostrar el producto actual como seleccionado -->
-                                        <option value="<?php echo $card['product_id']; ?>" selected>
-                                            <?php echo $card['name_product']; ?>
-                                        </option>
-                                        <!-- Listar otros productos disponibles -->
-                                        <?php foreach ($products as $product) {
-                                            if ($product['id_product'] != $card['product_id']) { ?>
-                                                <option value="<?php echo $product['id_product']; ?>">
-                                                    <?php echo $product['name_product']; ?>
-                                                </option>
-                                        <?php }
-                                        } ?>
-                                    </select>
-                                </div>
 
                                 <div class="form-group">
                                     <label for="price">Precio</label>
@@ -254,16 +234,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Script para cargar datos de la tarjeta en el formulario -->
         <script>
             function editCard(cardId) {
-                // Hacer una petición AJAX o cargar datos con PHP (simulación aquí)
+                // Cargar datos de la tarjeta seleccionada
                 const cards = <?php echo json_encode($cards); ?>;
                 const card = cards.find(c => c.id === cardId);
 
                 if (card) {
                     document.getElementById('card_id').value = card.id;
-                    document.getElementById('product_id').value = card.product_id;
-                    document.getElementById('description').value = card.description;
                     document.getElementById('price').value = card.price;
-                    // No se puede cargar la imagen de un archivo directamente
                     alert('Cargue una nueva imagen si desea modificarla.');
                 }
             }
