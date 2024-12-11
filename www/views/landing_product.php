@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             </div>
                                             <div class="form-group">
                                                 <label for="price">Precio:</label>
-                                                <input type="number" step="0.01" name="price" id="price" class="form-control" required>
+                                                <input type="number" step="0.01" name="price" id="price" class="form-control" required min="0">
                                             </div>
                                             <div class="form-group">
                                                 <label for="image">Imagen:</label>
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 <div class="form-group">
                                     <label for="price">Precio</label>
-                                    <input type="text" maxlength="50" class="form-control" id="price" name="price" value="<?php echo $card['price']; ?>">
+                                    <input type="text" maxlength="50" class="form-control" id="price" name="price" value="<?php echo $card['price']; ?>" pattern="[0-9]+(\.[0-9]{1,2})?">
                                 </div>
 
                                 <div class="form-group">
